@@ -11,3 +11,20 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
+
+security:
+  patterns:
+    ignoring:
+      GET: [ ]
+      POST:
+        - /api/users/signup
+      PATCH: [ ]
+      PUT: [ ]
+      DELETE: [ ]
+    permit-all:
+      GET: [ ]
+      POST: [ ]
+      PATCH: [ ]
+      PUT: [ ]
+      DELETE: [ ]
+      OPTIONS: [ ]
