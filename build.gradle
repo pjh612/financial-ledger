@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.3'
     id 'io.spring.dependency-management' version '1.0.13.RELEASE'
     id 'java'
+    id "org.flywaydb.flyway" version "6.2.4"
 }
 
 group = 'in.payhere'
@@ -21,15 +22,23 @@ repositories {
 dependencies {
     //SPRING BOOT
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    //JPA
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //DB
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
+
+    //REDIS
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    //FLYWAY
+    implementation "org.flywaydb:flyway-mysql"
+    implementation 'org.flywaydb:flyway-core:7.15.0'
+    testImplementation 'org.flywaydb.flyway-test-extensions:flyway-spring-test:7.0.0'
 
     //LOMBOK
     compileOnly 'org.projectlombok:lombok'
@@ -38,4 +47,8 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+flyway {
+    configFiles = ['flyway.conf']
 }
