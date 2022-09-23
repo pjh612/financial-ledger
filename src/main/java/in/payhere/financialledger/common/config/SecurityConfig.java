@@ -16,20 +16,38 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+
+import in.payhere.financialledger.common.config.properties.JwtConfigureProperties;
 import in.payhere.financialledger.common.config.properties.SecurityConfigProperties;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@EnableConfigurationProperties({SecurityConfigProperties.class})
+@EnableConfigurationProperties({SecurityConfigProperties.class, JwtConfigureProperties.class})
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	private final SecurityConfigProperties securityConfigProperties;
+	private final JwtConfigureProperties jwtConfigureProperties;
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public Algorithm algorithm() {
+		return Algorithm.HMAC512(this.jwtConfigureProperties.clientSecret());
+	}
+
+	@Bean
+	public JWTVerifier jwtVerifier(Algorithm algorithm) {
+		return JWT.require(algorithm)
+			.withIssuer(this.jwtConfigureProperties.issuer())
+			.build();
 	}
 
 	@Bean
