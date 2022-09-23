@@ -38,7 +38,7 @@ public class SecurityConfig {
 	private final JwtConfigureProperties jwtConfigureProperties;
 
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 

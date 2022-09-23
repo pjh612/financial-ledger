@@ -12,7 +12,10 @@ public enum ErrorCode implements ErrorModel {
 	DATA_INTEGRITY_VIOLATION("V003", "Data integrity violation", HttpStatus.BAD_REQUEST),
 
 	//USER
-	NOT_FOUND_USER("U001", "Not found data", HttpStatus.NOT_FOUND);
+	NOT_FOUND_USER("U001", "Not found data", HttpStatus.NOT_FOUND),
+
+	//AUTHENTICATION
+	AUTHENTICATION_FAIL("A001", "Authentication failed", HttpStatus.BAD_REQUEST);
 
 	private final String code;
 	private final String message;
@@ -47,4 +50,4 @@ public enum ErrorCode implements ErrorModel {
 			", message='" + message + '\'' +
 			']';
 	}
-	}
+}
