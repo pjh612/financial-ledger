@@ -9,7 +9,10 @@ public enum ErrorCode implements ErrorModel {
 	//VALIDATION
 	METHOD_ARGUMENT_NOT_VALID("V001", "Validation error", HttpStatus.BAD_REQUEST),
 	CONSTRAINT_VIOLATION("V002", "Validation error", HttpStatus.BAD_REQUEST),
-	DATA_INTEGRITY_VIOLATION("V003", "Data integrity violation", HttpStatus.BAD_REQUEST);
+	DATA_INTEGRITY_VIOLATION("V003", "Data integrity violation", HttpStatus.BAD_REQUEST),
+
+	//USER
+	NOT_FOUND_USER("U001", "Not found data", HttpStatus.NOT_FOUND);
 
 	private final String code;
 	private final String message;
@@ -44,4 +47,4 @@ public enum ErrorCode implements ErrorModel {
 			", message='" + message + '\'' +
 			']';
 	}
-}
+	}
