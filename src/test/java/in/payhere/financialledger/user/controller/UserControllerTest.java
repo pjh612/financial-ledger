@@ -25,6 +25,7 @@ import in.payhere.financialledger.common.ApiResponse;
 import in.payhere.financialledger.common.config.SecurityConfig;
 import in.payhere.financialledger.common.exception.ErrorCode;
 import in.payhere.financialledger.common.exception.ErrorResponse;
+import in.payhere.financialledger.common.security.jwt.JwtProvider;
 import in.payhere.financialledger.user.dto.request.SignUpRequest;
 import in.payhere.financialledger.user.dto.response.SignUpResponse;
 import in.payhere.financialledger.user.service.UserService;
@@ -40,6 +41,9 @@ public class UserControllerTest {
 
 	@MockBean
 	UserService userService;
+
+	@MockBean
+	JwtProvider jwtProvider;
 
 	@Test
 	@DisplayName("회원 가입 성공")
