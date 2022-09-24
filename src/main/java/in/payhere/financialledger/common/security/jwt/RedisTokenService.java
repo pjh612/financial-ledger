@@ -26,4 +26,10 @@ public class RedisTokenService implements TokenService {
 
 		return token;
 	}
+
+	@Override
+	public void delete(Long userId) {
+		redisTemplate.delete(userId.toString());
+	}
+
 }

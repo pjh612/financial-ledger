@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import in.payhere.financialledger.auth.dto.JwtToken;
 import in.payhere.financialledger.auth.dto.SignInResponse;
+import in.payhere.financialledger.auth.dto.SignOutResponse;
 import in.payhere.financialledger.common.config.properties.JwtConfigureProperties;
 import in.payhere.financialledger.common.exception.BusinessException;
 import in.payhere.financialledger.common.exception.EntityNotFoundException;
@@ -62,5 +63,11 @@ public class AuthService {
 				jwtConfigureProperties.refreshToken().expirySeconds()),
 			authenticationToken
 		);
+	}
+
+	public SignOutResponse signOut(Long userId) {
+		jwtProvider.deactivateRefreshToken(userId);
+
+		return new SignOutResponse(userId, jwtConfigureProperties.accessToken().header(), jwtConfigureProperties.refreshToken().header());
 	}
 }

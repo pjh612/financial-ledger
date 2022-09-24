@@ -93,6 +93,10 @@ public class JwtProvider {
 		return new Claims(this.jwtVerifier.verify(token));
 	}
 
+	public void deactivateRefreshToken(Long userId) {
+		tokenService.delete(userId);
+	}
+
 	@Getter
 	public static class Claims {
 		private Long userId;
