@@ -18,6 +18,7 @@ security:
       GET: [ ]
       POST:
         - /api/users/signup
+        - /api/users/signin
       PATCH: [ ]
       PUT: [ ]
       DELETE: [ ]
@@ -28,3 +29,11 @@ security:
       PUT: [ ]
       DELETE: [ ]
       OPTIONS: [ ]
+  jwt:
+    issuer: payhere
+    accessToken:
+      header: at
+      expiry-seconds: 21600
+    refreshToken:
+      header: rt
+      expiry-seconds: 28800

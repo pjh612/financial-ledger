@@ -10,3 +10,16 @@ spring:
     properties:
       hibernate:
         format_sql: ${SHOW_SQL:true}
+redis:
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+security:
+  jwt:
+    client-secret: ${JWT_SECRET:DEFAULT_JWT_SECRET}
+    accessToken:
+     expiry-seconds: 60
+    refreshToken:
+     expiry-seconds: 120
+cookie:
+  secure: ${COOKIE_SECURE:false}
+  same-site: ${COOKIE_SAME_SITE:lax}

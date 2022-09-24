@@ -15,21 +15,43 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+
+import in.payhere.financialledger.common.config.properties.CookieConfigProperties;
+import in.payhere.financialledger.common.config.properties.JwtConfigureProperties;
 import in.payhere.financialledger.common.config.properties.SecurityConfigProperties;
+import in.payhere.financialledger.common.security.jwt.JwtAuthenticationFilter;
+import in.payhere.financialledger.common.security.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@EnableConfigurationProperties({SecurityConfigProperties.class})
+@EnableConfigurationProperties({SecurityConfigProperties.class, JwtConfigureProperties.class, CookieConfigProperties.class})
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	private final SecurityConfigProperties securityConfigProperties;
+	private final JwtConfigureProperties jwtConfigureProperties;
 
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public Algorithm algorithm() {
+		return Algorithm.HMAC512(this.jwtConfigureProperties.clientSecret());
+	}
+
+	@Bean
+	public JWTVerifier jwtVerifier(Algorithm algorithm) {
+		return JWT.require(algorithm)
+			.withIssuer(this.jwtConfigureProperties.issuer())
+			.build();
 	}
 
 	@Bean
@@ -47,8 +69,12 @@ public class SecurityConfig {
 		return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
 	}
 
+	JwtAuthenticationFilter jwtAuthenticationFilter(JwtProvider jwtProvider, CookieConfigProperties cookieConfigProperties) {
+		return new JwtAuthenticationFilter(jwtProvider, jwtConfigureProperties,cookieConfigProperties);
+	}
+
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http, JwtProvider jwtProvider, CookieConfigProperties cookieConfigProperties) throws Exception {
 		http
 			.authorizeRequests()
 			.antMatchers(HttpMethod.GET, this.securityConfigProperties.patterns().permitAll().get("GET"))
@@ -74,7 +100,9 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.exceptionHandling()
-				.authenticationEntryPoint(authenticationEntryPoint());
+				.authenticationEntryPoint(authenticationEntryPoint())
+			.and()
+			.addFilterBefore(jwtAuthenticationFilter(jwtProvider, cookieConfigProperties), UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
