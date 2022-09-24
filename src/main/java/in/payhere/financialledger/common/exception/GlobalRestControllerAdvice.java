@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalRestControllerAdvice {
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<ErrorResponse<ErrorCode>> handleMethodArgumentNotValidException(
+	public ResponseEntity<ErrorResponse<ErrorModel>> handleMethodArgumentNotValidException(
 		MethodArgumentNotValidException e) {
 		log.warn("Method argument not valid exception occurred : {}", e.toString(), e);
 
@@ -24,29 +24,36 @@ public class GlobalRestControllerAdvice {
 	}
 
 	@ExceptionHandler({TransactionSystemException.class, ConstraintViolationException.class})
-	public ResponseEntity<ErrorResponse<ErrorCode>> handleConstraintViolation(ConstraintViolationException e) {
+	public ResponseEntity<ErrorResponse<ErrorModel>> handleConstraintViolation(ConstraintViolationException e) {
 		log.warn("Constraint violation exception occurred: {}", e.toString(), e);
 
 		return newResponse(ErrorCode.CONSTRAINT_VIOLATION);
 	}
 
 	@ExceptionHandler(DataIntegrityViolationException.class)
-	public ResponseEntity<ErrorResponse<ErrorCode>> handleDataIntegrityViolationException(
+	public ResponseEntity<ErrorResponse<ErrorModel>> handleDataIntegrityViolationException(
 		DataIntegrityViolationException e) {
 		log.warn("DataIntegrityViolation exception occurred : {}", e.toString(), e);
 
 		return newResponse(ErrorCode.DATA_INTEGRITY_VIOLATION);
 	}
 
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ErrorResponse<ErrorModel>> handleBusinessException(BusinessException e) {
+		log.error("Business exception occurred : {}", e.toString(), e);
+
+		return newResponse(e.errorModel());
+	}
+
 	@ExceptionHandler({RuntimeException.class, Exception.class})
-	public ResponseEntity<ErrorResponse<ErrorCode>> handleRuntimeException(Throwable e) {
+	public ResponseEntity<ErrorResponse<ErrorModel>> handleRuntimeException(Throwable e) {
 		log.error("Unexpected exception occurred : {}", e.getMessage(), e);
 
 		return newResponse(ErrorCode.RUNTIME_EXCEPTION);
 	}
 
-	private ResponseEntity<ErrorResponse<ErrorCode>> newResponse(ErrorCode errorCode) {
-		ErrorResponse<ErrorCode> errorResponse = new ErrorResponse<>(errorCode);
+	private ResponseEntity<ErrorResponse<ErrorModel>> newResponse(ErrorModel errorCode) {
+		ErrorResponse<ErrorModel> errorResponse = new ErrorResponse<>(errorCode);
 		return new ResponseEntity<>(errorResponse, errorCode.getStatus());
 	}
 }
