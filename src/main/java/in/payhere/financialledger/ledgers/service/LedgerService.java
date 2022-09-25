@@ -1,13 +1,24 @@
 package in.payhere.financialledger.ledgers.service;
 
+import static java.text.MessageFormat.format;
+
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import in.payhere.financialledger.common.exception.BusinessException;
+import in.payhere.financialledger.common.exception.EntityNotFoundException;
+import in.payhere.financialledger.common.exception.ErrorCode;
 import in.payhere.financialledger.ledgers.entity.Ledger;
+import in.payhere.financialledger.ledgers.entity.LedgerRecord;
+import in.payhere.financialledger.ledgers.repository.LedgerRecordRepository;
 import in.payhere.financialledger.ledgers.repository.LedgerRepository;
 import in.payhere.financialledger.ledgers.service.dto.LedgerResponse;
+import in.payhere.financialledger.ledgers.service.dto.request.CreateLedgerRecordRequest;
+import in.payhere.financialledger.ledgers.service.dto.request.UpdateLedgerRecordRequest;
+import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerRecordResponse;
 import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerResponse;
 import in.payhere.financialledger.user.converter.UserConverter;
 import in.payhere.financialledger.user.entity.User;
@@ -19,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class LedgerService {
 	private final LedgerRepository ledgerRepository;
+	private final LedgerRecordRepository ledgerRecordRepository;
 	private final UserService userService;
 	private final UserConverter userConverter;
 
@@ -59,4 +71,34 @@ public class LedgerService {
 		return new CreateLedgerRecordResponse(ledgerRecordRepository.save(newLedgerRecord).getId());
 	}
 
+	public void remove(long userId, Long recordId) {
+		LedgerRecord foundLedgerRecord = ledgerRecordRepository.findByIdAndUserIdAndIsRemoved(recordId, userId, false)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_LEDGER_RECORD,
+				format("User({0})'s records does not contain record ID{1} or has been removed", userId, recordId)));
+
+		foundLedgerRecord.remove();
+	}
+
+	public void restore(long userId, Long recordId) {
+		LedgerRecord foundLedgerRecord = ledgerRecordRepository.findByIdAndUserIdAndIsRemoved(recordId, userId, true)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_LEDGER_RECORD,
+				format("User({0})'s records does not contain record ID{1} or is not removed ", userId, recordId)));
+
+		foundLedgerRecord.restore();
+	}
+
+	public void update(UpdateLedgerRecordRequest request) {
+		LedgerRecord foundLedgerRecord = ledgerRecordRepository.findByIdAndUserIdAndIsRemoved(
+				request.recordId(),
+				request.userId(),
+				false)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_LEDGER_RECORD,
+				format("User({0})'s records does not contain record ID{1} or has been removed",
+					request.userId(),
+					request.recordId()))
+			);
+
+		foundLedgerRecord.updateAmount(request.amount());
+		foundLedgerRecord.updateMemo(request.memo());
+	}
 }
