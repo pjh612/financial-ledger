@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +20,16 @@ import in.payhere.financialledger.common.ApiResponse;
 import in.payhere.financialledger.common.security.jwt.JwtAuthentication;
 import in.payhere.financialledger.ledgers.controller.request.CreateLedgerRecordWebRequest;
 import in.payhere.financialledger.ledgers.controller.request.CreateLedgerWebRequest;
+import in.payhere.financialledger.ledgers.controller.request.SearchLedgerRecordWebRequest;
 import in.payhere.financialledger.ledgers.controller.request.UpdateLedgerRecordWebRequest;
+import in.payhere.financialledger.ledgers.repository.dto.RecordSearchCondition;
 import in.payhere.financialledger.ledgers.service.LedgerService;
 import in.payhere.financialledger.ledgers.service.dto.LedgerResponse;
 import in.payhere.financialledger.ledgers.service.dto.request.CreateLedgerRecordRequest;
 import in.payhere.financialledger.ledgers.service.dto.request.UpdateLedgerRecordRequest;
 import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerRecordResponse;
 import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerResponse;
+import in.payhere.financialledger.ledgers.service.dto.response.LedgerRecordResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -60,6 +65,30 @@ public class LedgerController {
 		);
 
 		return new ApiResponse<>(ledgerService.record(serviceRequest));
+	}
+
+	@GetMapping("/{ledgerId}/records")
+	public ApiResponse<Page<LedgerRecordResponse>> getRecords(
+		@AuthenticationPrincipal JwtAuthentication auth,
+		@PathVariable Long ledgerId,
+		SearchLedgerRecordWebRequest condition,
+		Pageable pageable) {
+		RecordSearchCondition serviceCondition = new RecordSearchCondition(
+			auth.id(),
+			ledgerId,
+			condition.isRemoved(),
+			condition.type(),
+			condition.startAt(),
+			condition.endAt()
+		);
+		return new ApiResponse<>(ledgerService.findRecordsByPaging(pageable, serviceCondition));
+	}
+
+	@GetMapping("/records/{recordId}")
+	public ApiResponse<LedgerRecordResponse> getRecord(
+		@AuthenticationPrincipal JwtAuthentication auth,
+		@PathVariable Long recordId) {
+		return new ApiResponse<>(ledgerService.findOneRecordByUserIdAndRecordId(auth.id(), recordId));
 	}
 
 	@PatchMapping("/records/{recordId}")

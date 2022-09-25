@@ -5,6 +5,8 @@ import static java.text.MessageFormat.format;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +17,13 @@ import in.payhere.financialledger.ledgers.entity.Ledger;
 import in.payhere.financialledger.ledgers.entity.LedgerRecord;
 import in.payhere.financialledger.ledgers.repository.LedgerRecordRepository;
 import in.payhere.financialledger.ledgers.repository.LedgerRepository;
+import in.payhere.financialledger.ledgers.repository.dto.RecordSearchCondition;
 import in.payhere.financialledger.ledgers.service.dto.LedgerResponse;
 import in.payhere.financialledger.ledgers.service.dto.request.CreateLedgerRecordRequest;
 import in.payhere.financialledger.ledgers.service.dto.request.UpdateLedgerRecordRequest;
 import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerRecordResponse;
 import in.payhere.financialledger.ledgers.service.dto.response.CreateLedgerResponse;
+import in.payhere.financialledger.ledgers.service.dto.response.LedgerRecordResponse;
 import in.payhere.financialledger.user.converter.UserConverter;
 import in.payhere.financialledger.user.entity.User;
 import in.payhere.financialledger.user.service.UserService;
@@ -48,6 +52,33 @@ public class LedgerService {
 			.stream()
 			.map(ledger -> new LedgerResponse(ledger.getId(), ledger.getName()))
 			.toList();
+	}
+
+	public LedgerRecordResponse findOneRecordByUserIdAndRecordId(Long userId, Long recordId) {
+		LedgerRecord foundLedgerRecord = ledgerRecordRepository.findByIdAndUserIdAndIsRemoved(recordId, userId, false)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_LEDGER_RECORD,
+				format("User({0})'s records does not contain record ID{1} or has been removed", userId, recordId)));
+
+		return new LedgerRecordResponse(
+			foundLedgerRecord.getId(),
+			foundLedgerRecord.getAmount(),
+			foundLedgerRecord.getMemo(),
+			foundLedgerRecord.getDatetime(),
+			foundLedgerRecord.getType(),
+			foundLedgerRecord.isRemoved()
+		);
+	}
+
+	public Page<LedgerRecordResponse> findRecordsByPaging(Pageable pageRequest, RecordSearchCondition condition) {
+		return ledgerRecordRepository.findByDynamicQuery(pageRequest, condition)
+			.map(ledgerRecord -> new LedgerRecordResponse(
+				ledgerRecord.getId(),
+				ledgerRecord.getAmount(),
+				ledgerRecord.getMemo(),
+				ledgerRecord.getDatetime(),
+				ledgerRecord.getType(),
+				ledgerRecord.isRemoved())
+			);
 	}
 
 	public CreateLedgerRecordResponse record(CreateLedgerRecordRequest request) {
