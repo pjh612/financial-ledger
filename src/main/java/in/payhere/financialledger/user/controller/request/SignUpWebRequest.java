@@ -1,9 +1,9 @@
-package in.payhere.financialledger.user.dto.request;
+package in.payhere.financialledger.user.controller.request;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 
-public record SignUpRequest(
+public record SignUpWebRequest(
 	@Email
 	String email,
 

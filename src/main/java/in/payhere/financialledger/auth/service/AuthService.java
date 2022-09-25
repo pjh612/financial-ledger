@@ -5,9 +5,9 @@ import static java.text.MessageFormat.format;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import in.payhere.financialledger.auth.dto.JwtToken;
-import in.payhere.financialledger.auth.dto.SignInResponse;
-import in.payhere.financialledger.auth.dto.SignOutResponse;
+import in.payhere.financialledger.auth.service.dto.response.JwtToken;
+import in.payhere.financialledger.auth.service.dto.response.SignInResponse;
+import in.payhere.financialledger.auth.service.dto.response.SignOutResponse;
 import in.payhere.financialledger.common.config.properties.JwtConfigureProperties;
 import in.payhere.financialledger.common.exception.BusinessException;
 import in.payhere.financialledger.common.exception.EntityNotFoundException;
@@ -16,7 +16,7 @@ import in.payhere.financialledger.common.security.Role;
 import in.payhere.financialledger.common.security.jwt.JwtAuthentication;
 import in.payhere.financialledger.common.security.jwt.JwtAuthenticationToken;
 import in.payhere.financialledger.common.security.jwt.JwtProvider;
-import in.payhere.financialledger.user.dto.response.UserResponse;
+import in.payhere.financialledger.user.service.dto.response.UserResponse;
 import in.payhere.financialledger.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 

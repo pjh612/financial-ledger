@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import in.payhere.financialledger.auth.dto.SignInResponse;
+import in.payhere.financialledger.auth.service.dto.response.SignInResponse;
 import in.payhere.financialledger.common.exception.BusinessException;
 import in.payhere.financialledger.common.security.Role;
 import in.payhere.financialledger.user.entity.User;
