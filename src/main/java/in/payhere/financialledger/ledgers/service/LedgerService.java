@@ -37,4 +37,26 @@ public class LedgerService {
 			.map(ledger -> new LedgerResponse(ledger.getId(), ledger.getName()))
 			.toList();
 	}
+
+	public CreateLedgerRecordResponse record(CreateLedgerRecordRequest request) {
+		Ledger foundLedger = ledgerRepository.findById(request.ledgerId())
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_LEDGER));
+
+		if (!Objects.equals(foundLedger.getUser().getId(), request.userId())) {
+			throw new BusinessException(ErrorCode.FORBIDDEN,
+				format("Ledger({0}) is not owned by user({1})", foundLedger.getId(), request.userId())
+			);
+		}
+
+		LedgerRecord newLedgerRecord = new LedgerRecord(
+			foundLedger,
+			request.amount(),
+			request.memo(),
+			request.datetime(),
+			request.type()
+		);
+
+		return new CreateLedgerRecordResponse(ledgerRecordRepository.save(newLedgerRecord).getId());
+	}
+
 }

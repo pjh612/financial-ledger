@@ -37,4 +37,20 @@ public class LedgerController {
 	public ApiResponse<List<LedgerResponse>> getLedgers(@AuthenticationPrincipal JwtAuthentication auth) {
 		return new ApiResponse<>(ledgerService.findAllLedgersByUserId(auth.id()));
 	}
+
+	@PostMapping("/records")
+	public ApiResponse<CreateLedgerRecordResponse> record(
+		@AuthenticationPrincipal JwtAuthentication auth,
+		@RequestBody @Valid CreateLedgerRecordWebRequest request) {
+		CreateLedgerRecordRequest serviceRequest = new CreateLedgerRecordRequest(
+			request.ledgerId(),
+			auth.id(),
+			request.amount(),
+			request.memo(),
+			request.dateTime(),
+			request.type()
+		);
+
+		return new ApiResponse<>(ledgerService.record(serviceRequest));
+	}
 }
