@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode implements ErrorModel {
 	//COMMON
 	RUNTIME_EXCEPTION("C001", "Runtime error", HttpStatus.BAD_REQUEST),
+	FORBIDDEN("C002", "You don't have authorities.", HttpStatus.FORBIDDEN),
 
 	//VALIDATION
 	METHOD_ARGUMENT_NOT_VALID("V001", "Validation error", HttpStatus.BAD_REQUEST),
@@ -15,7 +16,11 @@ public enum ErrorCode implements ErrorModel {
 	NOT_FOUND_USER("U001", "Not found data", HttpStatus.NOT_FOUND),
 
 	//AUTHENTICATION
-	AUTHENTICATION_FAIL("A001", "Authentication failed", HttpStatus.BAD_REQUEST);
+	AUTHENTICATION_FAIL("A001", "Authentication failed", HttpStatus.BAD_REQUEST),
+
+	//LEDGER
+	NOT_FOUND_LEDGER("L001", "Not found data", HttpStatus.NOT_FOUND),
+	NOT_FOUND_LEDGER_RECORD("L002", "Not found data", HttpStatus.NOT_FOUND);
 
 	private final String code;
 	private final String message;

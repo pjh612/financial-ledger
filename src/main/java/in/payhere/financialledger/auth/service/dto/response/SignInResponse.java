@@ -1,10 +1,9 @@
-package in.payhere.financialledger.auth.dto;
+package in.payhere.financialledger.auth.service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import in.payhere.financialledger.common.security.Role;
 import in.payhere.financialledger.common.security.jwt.JwtAuthenticationToken;
-import in.payhere.financialledger.common.security.jwt.TokenResponse;
 
 public record SignInResponse(
 	Long id,

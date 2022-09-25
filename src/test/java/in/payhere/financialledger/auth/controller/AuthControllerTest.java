@@ -33,10 +33,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import in.payhere.financialledger.auth.dto.JwtToken;
-import in.payhere.financialledger.auth.dto.SignInRequest;
-import in.payhere.financialledger.auth.dto.SignInResponse;
-import in.payhere.financialledger.auth.dto.SignOutResponse;
+import in.payhere.financialledger.auth.service.dto.response.JwtToken;
+import in.payhere.financialledger.auth.controller.request.SignInWebRequest;
+import in.payhere.financialledger.auth.service.dto.response.SignInResponse;
+import in.payhere.financialledger.auth.service.dto.response.SignOutResponse;
 import in.payhere.financialledger.auth.service.AuthService;
 import in.payhere.financialledger.common.ApiResponse;
 import in.payhere.financialledger.common.config.SecurityConfig;
@@ -90,7 +90,7 @@ public class AuthControllerTest {
 		JwtAuthenticationToken jwtAuthenticationToken = new JwtAuthenticationToken(jwtAuthentication, null,
 			authorities);
 
-		SignInRequest signInRequest = new SignInRequest(email, password);
+		SignInWebRequest signInRequest = new SignInWebRequest(email, password);
 		SignInResponse signInResponse = new SignInResponse(1L, email, Role.USER, accessToken, refreshToken,
 			jwtAuthenticationToken);
 		String request = objectMapper.writeValueAsString(signInRequest);
@@ -123,7 +123,7 @@ public class AuthControllerTest {
 		String email = "test1234@gmail.com";
 		String password = "test12345";
 
-		SignInRequest signInRequest = new SignInRequest(email, password);
+		SignInWebRequest signInRequest = new SignInWebRequest(email, password);
 
 		ErrorModel errorCode = ErrorCode.AUTHENTICATION_FAIL;
 		String request = objectMapper.writeValueAsString(signInRequest);
@@ -154,7 +154,7 @@ public class AuthControllerTest {
 		String email = "test1234@gmail.com";
 		String password = "test12345";
 
-		SignInRequest signInRequest = new SignInRequest(email, password);
+		SignInWebRequest signInRequest = new SignInWebRequest(email, password);
 
 		ErrorModel errorCode = ErrorCode.AUTHENTICATION_FAIL;
 		String request = objectMapper.writeValueAsString(signInRequest);
@@ -185,7 +185,7 @@ public class AuthControllerTest {
 		String email = "test1234";
 		String password = "test12345";
 
-		SignInRequest signInRequest = new SignInRequest(email, password);
+		SignInWebRequest signInRequest = new SignInWebRequest(email, password);
 
 		String request = objectMapper.writeValueAsString(signInRequest);
 		ErrorResponse<ErrorModel> response = new ErrorResponse<>(ErrorCode.METHOD_ARGUMENT_NOT_VALID);

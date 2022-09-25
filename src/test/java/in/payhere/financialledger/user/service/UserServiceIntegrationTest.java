@@ -14,10 +14,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import in.payhere.financialledger.common.exception.EntityNotFoundException;
-import in.payhere.financialledger.user.dto.request.SignUpRequest;
-import in.payhere.financialledger.user.dto.response.SignUpResponse;
-import in.payhere.financialledger.user.dto.response.UserResponse;
+import in.payhere.financialledger.user.controller.request.SignUpWebRequest;
 import in.payhere.financialledger.user.entity.User;
+import in.payhere.financialledger.user.service.dto.response.SignUpResponse;
+import in.payhere.financialledger.user.service.dto.response.UserResponse;
 
 @SpringBootTest
 @Transactional
@@ -36,7 +36,7 @@ class UserServiceIntegrationTest {
 	@DisplayName("회원 가입 성공하면 ID값을 반환한다")
 	void signUpSuccess() {
 		//given
-		SignUpRequest request = new SignUpRequest("testuser12@gmail.com", "test12345");
+		SignUpWebRequest request = new SignUpWebRequest("testuser12@gmail.com", "test12345");
 
 		//when
 		SignUpResponse response = userService.signUp(request.email(), request.password());
@@ -54,7 +54,7 @@ class UserServiceIntegrationTest {
 		em.persist(userA);
 		em.flush();
 
-		SignUpRequest request = new SignUpRequest(duplicatedEmail, "test12345");
+		SignUpWebRequest request = new SignUpWebRequest(duplicatedEmail, "test12345");
 
 		//when
 		userService.signUp(request.email(), request.password());

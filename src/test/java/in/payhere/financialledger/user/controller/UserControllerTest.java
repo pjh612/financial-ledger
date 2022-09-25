@@ -26,9 +26,9 @@ import in.payhere.financialledger.common.config.SecurityConfig;
 import in.payhere.financialledger.common.exception.ErrorCode;
 import in.payhere.financialledger.common.exception.ErrorResponse;
 import in.payhere.financialledger.common.security.jwt.JwtProvider;
-import in.payhere.financialledger.user.dto.request.SignUpRequest;
-import in.payhere.financialledger.user.dto.response.SignUpResponse;
+import in.payhere.financialledger.user.controller.request.SignUpWebRequest;
 import in.payhere.financialledger.user.service.UserService;
+import in.payhere.financialledger.user.service.dto.response.SignUpResponse;
 
 @WebMvcTest({UserController.class, SecurityConfig.class})
 public class UserControllerTest {
@@ -52,7 +52,7 @@ public class UserControllerTest {
 		String email = "test1234@gmail.com";
 		String password = "test12345";
 
-		SignUpRequest signUpRequest = new SignUpRequest(email, password);
+		SignUpWebRequest signUpRequest = new SignUpWebRequest(email, password);
 		SignUpResponse signUpResponse = new SignUpResponse(1L);
 
 		String request = objectMapper.writeValueAsString(signUpRequest);
@@ -81,7 +81,7 @@ public class UserControllerTest {
 		String email = "test1234";
 		String password = "test12345";
 
-		SignUpRequest signUpRequest = new SignUpRequest(email, password);
+		SignUpWebRequest signUpRequest = new SignUpWebRequest(email, password);
 
 		String request = objectMapper.writeValueAsString(signUpRequest);
 		ErrorResponse<ErrorCode> response = new ErrorResponse<>(ErrorCode.METHOD_ARGUMENT_NOT_VALID);

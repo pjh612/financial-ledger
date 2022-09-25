@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import in.payhere.financialledger.auth.dto.JwtToken;
-import in.payhere.financialledger.auth.dto.SignInRequest;
-import in.payhere.financialledger.auth.dto.SignInResponse;
-import in.payhere.financialledger.auth.dto.SignOutResponse;
+import in.payhere.financialledger.auth.service.dto.response.JwtToken;
+import in.payhere.financialledger.auth.controller.request.SignInWebRequest;
+import in.payhere.financialledger.auth.service.dto.response.SignInResponse;
+import in.payhere.financialledger.auth.service.dto.response.SignOutResponse;
 import in.payhere.financialledger.auth.service.AuthService;
 import in.payhere.financialledger.common.ApiResponse;
 import in.payhere.financialledger.common.config.properties.CookieConfigProperties;
@@ -36,7 +36,7 @@ public class AuthController {
 	private final CookieConfigProperties cookieConfigProperties;
 
 	@PostMapping("/signin")
-	public ApiResponse<SignInResponse> signIn(@RequestBody @Valid SignInRequest signInRequest,
+	public ApiResponse<SignInResponse> signIn(@RequestBody @Valid SignInWebRequest signInRequest,
 		HttpServletRequest request, HttpServletResponse response) {
 		SignInResponse signInResponse = this.authService.signIn(
 			signInRequest.email(),
