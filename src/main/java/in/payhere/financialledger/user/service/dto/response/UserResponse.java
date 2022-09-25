@@ -1,4 +1,4 @@
-package in.payhere.financialledger.user.dto.response;
+package in.payhere.financialledger.user.service.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

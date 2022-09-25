@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import in.payhere.financialledger.common.exception.EntityNotFoundException;
 import in.payhere.financialledger.common.exception.ErrorCode;
-import in.payhere.financialledger.user.dto.response.SignUpResponse;
-import in.payhere.financialledger.user.dto.response.UserResponse;
+import in.payhere.financialledger.user.converter.UserConverter;
+import in.payhere.financialledger.user.service.dto.response.SignUpResponse;
+import in.payhere.financialledger.user.service.dto.response.UserResponse;
 import in.payhere.financialledger.user.entity.User;
 import in.payhere.financialledger.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final UserConverter userConverter;
 
 	@Transactional
 	public SignUpResponse signUp(String email, String password) {
@@ -34,6 +36,14 @@ public class UserService {
 			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_USER,
 				MessageFormat.format("email : {0} not found", email)));
 
-		return new UserResponse(foundUser.getId(), foundUser.getEmail(), foundUser.getPassword());
+		return userConverter.toUserResponse(foundUser);
+	}
+
+	public UserResponse findById(Long userId) {
+		User foundUser = userRepository.findById(userId)
+			.orElseThrow(() -> new EntityNotFoundException(ErrorCode.NOT_FOUND_USER,
+				MessageFormat.format("userId : {0} not found", userId)));
+
+		return userConverter.toUserResponse(foundUser);
 	}
 }
