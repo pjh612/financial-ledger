@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import in.payhere.financialledger.common.BaseEntity;
 import lombok.AccessLevel;
@@ -33,6 +34,7 @@ public class LedgerRecord extends BaseEntity {
 	@Positive
 	private int amount;
 
+	@Size(min = 2, max = 300)
 	private String memo;
 
 	private LocalDateTime datetime;

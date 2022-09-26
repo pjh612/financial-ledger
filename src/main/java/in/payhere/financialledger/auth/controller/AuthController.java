@@ -42,8 +42,6 @@ public class AuthController {
 			signInRequest.email(),
 			signInRequest.password()
 		);
-		log.error(signInRequest.email());
-		log.error(signInRequest.password());
 		signInResponse.jwtAuthenticationToken()
 			.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		SecurityContextHolder.getContext().setAuthentication(signInResponse.jwtAuthenticationToken());
