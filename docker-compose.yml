@@ -1,0 +1,58 @@
+version: '3.8'
+
+networks:
+  default:
+    name: payhere2
+
+volumes:
+  data:
+    driver: local
+  config:
+    driver: local
+
+services:
+  pjh_mysql5.7:
+    image: mysql:5.7
+    container_name: pjh_mysql5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=ledger
+      - MYSQL_PASSWORD=password
+    platform: linux/amd64
+    restart: always
+
+  pjh_mysql5.7-phpmyadmin:
+    depends_on:
+      - pjh_mysql5.7
+    image: phpmyadmin/phpmyadmin
+    container_name: pjh_mysql5.7-phpmyadmin
+    ports:
+      - 8082:80
+    environment:
+      - PMA_HOST=pjh_mysql5.7
+      - MYSQL_ROOT_PASSWORD=password
+    platform: linux/amd64
+    restart: always
+  pjh_redis:
+    image: redis
+    container_name: pjh_redis
+    ports:
+      - 6379:6379
+  pjh_ledger_application:
+    build: .
+    environment:
+      - MYSQL_HOST=pjh_mysql5.7
+      - REDIS_HOST=pjh_redis
+      - SPRING_ACTIVE_PROFILE=local
+    ports:
+      - 8080:8080
+    depends_on:
+      - pjh_mysql5.7
+      - pjh_redis
+    container_name: pjh_ledger_application
+    restart: on-failure
