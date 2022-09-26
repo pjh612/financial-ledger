@@ -72,7 +72,7 @@ public class LedgerController {
 	public ApiResponse<Page<LedgerRecordResponse>> getRecords(
 		@AuthenticationPrincipal JwtAuthentication auth,
 		@PathVariable Long ledgerId,
-		SearchLedgerRecordWebRequest condition,
+		@RequestBody SearchLedgerRecordWebRequest condition,
 		Pageable pageable) {
 		RecordSearchCondition serviceCondition = new RecordSearchCondition(
 			auth.id(),
