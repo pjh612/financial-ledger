@@ -61,7 +61,7 @@ public class LedgerController {
 			auth.id(),
 			request.amount(),
 			request.memo(),
-			request.dateTime(),
+			request.datetime(),
 			request.type()
 		);
 
