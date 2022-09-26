@@ -8,9 +8,6 @@ import javax.validation.constraints.Size;
 import in.payhere.financialledger.ledgers.entity.RecordType;
 
 public record CreateLedgerRecordWebRequest(
-	Long ledgerId,
-	Long userId,
-
 	@Positive
 	int amount,
 

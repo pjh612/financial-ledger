@@ -51,12 +51,13 @@ public class LedgerController {
 		return new ApiResponse<>(ledgerService.findAllLedgersByUserId(auth.id()));
 	}
 
-	@PostMapping("/records")
+	@PostMapping("/{ledgerId}/records")
 	public ApiResponse<CreateLedgerRecordResponse> record(
 		@AuthenticationPrincipal JwtAuthentication auth,
+		@PathVariable Long ledgerId,
 		@RequestBody @Valid CreateLedgerRecordWebRequest request) {
 		CreateLedgerRecordRequest serviceRequest = new CreateLedgerRecordRequest(
-			request.ledgerId(),
+			ledgerId,
 			auth.id(),
 			request.amount(),
 			request.memo(),
