@@ -19,7 +19,7 @@ security:
     client-secret: TEST_SECRET
 redis:
   host: ${REDIS_HOST:localhost}
-  port: ${REDIS_PORT:6379}
+  port: ${REDIS_PORT:6399}
 
 cookie:
   secure: false
