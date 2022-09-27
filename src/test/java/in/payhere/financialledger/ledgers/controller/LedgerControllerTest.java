@@ -131,8 +131,6 @@ class LedgerControllerTest {
 	@WithMockJwtAuthentication
 	void recordNegativeAmountFail() throws Exception {
 		CreateLedgerRecordWebRequest createLedgerRequest = new CreateLedgerRecordWebRequest(
-			1L,
-			1L,
 			-2000,
 			"memo",
 			LocalDateTime.now(),
@@ -142,7 +140,7 @@ class LedgerControllerTest {
 		ErrorResponse<ErrorModel> response = new ErrorResponse<>(ErrorCode.METHOD_ARGUMENT_NOT_VALID);
 
 		//when
-		ResultActions perform = mockMvc.perform(post("/api/ledgers/records")
+		ResultActions perform = mockMvc.perform(post("/api/ledgers/{ledgerId}/records", 1L)
 			.content(request)
 			.contentType(MediaType.APPLICATION_JSON)
 		).andDo(print());
