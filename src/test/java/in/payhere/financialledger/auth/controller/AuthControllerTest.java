@@ -33,11 +33,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import in.payhere.financialledger.auth.service.dto.response.JwtToken;
 import in.payhere.financialledger.auth.controller.request.SignInWebRequest;
+import in.payhere.financialledger.auth.service.AuthService;
+import in.payhere.financialledger.auth.service.dto.response.JwtToken;
 import in.payhere.financialledger.auth.service.dto.response.SignInResponse;
 import in.payhere.financialledger.auth.service.dto.response.SignOutResponse;
-import in.payhere.financialledger.auth.service.AuthService;
 import in.payhere.financialledger.common.ApiResponse;
 import in.payhere.financialledger.common.config.SecurityConfig;
 import in.payhere.financialledger.common.config.properties.JwtConfigureProperties;
@@ -50,10 +50,11 @@ import in.payhere.financialledger.common.security.jwt.JwtAuthentication;
 import in.payhere.financialledger.common.security.jwt.JwtAuthenticationToken;
 import in.payhere.financialledger.common.security.jwt.JwtProvider;
 import in.payhere.financialledger.common.security.jwt.TokenService;
+import in.payhere.financialledger.security.WithMockJwtAuthentication;
 
 @WebMvcTest({AuthController.class, SecurityConfig.class, JwtConfigureProperties.class, JwtProvider.class,
 	TokenService.class})
-public class AuthControllerTest {
+class AuthControllerTest {
 
 	@Autowired
 	MockMvc mockMvc;
@@ -205,9 +206,10 @@ public class AuthControllerTest {
 
 	@Test
 	@DisplayName("로그아웃 성공")
+	@WithMockJwtAuthentication
 	void signOutSuccess() throws Exception {
 		//given
-		setTestAuthentication();
+		//setTestAuthentication();
 		JwtToken accessToken = new JwtToken("at", "accessToken", 30L);
 		JwtToken refreshToken = new JwtToken("rt", "refreshToken", 60L);
 

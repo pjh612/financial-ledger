@@ -1,9 +1,13 @@
-package in.payhere.financialledger.common.config;
+package in.payhere.financialledger.config;
+
+import java.io.IOException;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,15 +15,29 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import in.payhere.financialledger.common.config.properties.RedisConfigProperties;
-import lombok.RequiredArgsConstructor;
+import redis.embedded.RedisServer;
 
-@Profile("local")
-@RequiredArgsConstructor
 @Configuration
 @EnableRedisRepositories
 @EnableConfigurationProperties(RedisConfigProperties.class)
-public class RedisConfig {
-	private final RedisConfigProperties redisConfigProperties;
+public class TestRedisConfig {
+	private RedisServer redisServer;
+	private RedisConfigProperties redisConfigProperties;
+
+	public TestRedisConfig(RedisConfigProperties redisConfigProperties) {
+		this.redisConfigProperties = redisConfigProperties;
+		redisServer = new RedisServer(redisConfigProperties.port());
+	}
+
+	@PostConstruct
+	public void startRedis() throws IOException {
+		redisServer.start();
+	}
+
+	@PreDestroy
+	public void stopRedis() {
+		redisServer.stop();
+	}
 
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory() {
