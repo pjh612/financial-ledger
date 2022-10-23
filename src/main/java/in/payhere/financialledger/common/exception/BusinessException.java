@@ -12,6 +12,11 @@ public class BusinessException extends RuntimeException {
 		this.errorModel = errorModel;
 	}
 
+	public BusinessException(Throwable cause, ErrorModel errorModel) {
+		super(cause);
+		this.errorModel = errorModel;
+	}
+
 	public ErrorModel errorModel() {
 		return errorModel;
 	}

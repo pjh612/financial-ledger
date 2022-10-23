@@ -11,15 +11,31 @@ spring:
   redis:
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
-
+  mail:
+    host: smtp.naver.com
+    port: 465
+    username: ${SMTP_EMAIL}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+          ssl:
+            trust: smtp.naver.com
+            enable: true
 security:
   patterns:
     ignoring:
-      GET: [ ]
+      GET:
+        - /users/signup
       POST:
         - /api/users/signup
         - /api/users/signin
-      PATCH: [ ]
+        - /api/users/email-check
+      PATCH:
+        - /api/users/email-confirm
       PUT: [ ]
       DELETE: [ ]
     permit-all:

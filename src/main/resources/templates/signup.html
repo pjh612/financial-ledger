@@ -1,0 +1,81 @@
+<html lang="en">
+<head>
+    <script src="/webjars/axios/0.27.2/dist/axios.js"></script>
+    <title>회원가입</title>
+</head>
+<script>
+    function signUpRequest() {
+        axios
+            .post("/api/users/signup",
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    email: document.getElementById("email").value,
+                    password: document.getElementById("password").value,
+                }
+            )
+            .then(response => {
+                window.location.href = "http://localhost:8080/users/signin";
+            })
+            .catch(error => {
+                alert("오류가 발생했습니다. \n" + error);
+            })
+    }
+
+    function mailCheck() {
+        axios
+            .post("/api/users/emails/verification/token",
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    email: document.getElementById("email").value,
+                }
+            )
+            .then(response => {
+                alert("인증메일 전송 완료");
+            })
+            .catch(error => {
+                alert("오류가 발생했습니다.\n" + error);
+            })
+    }
+
+    function mailConfirm() {
+        axios.patch("/api/users/verification",
+                {
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    email: document.getElementById("email").value,
+                    token: document.getElementById("token").value,
+                }
+            )
+            .then(response => {
+                alert("메일 인증 완료");
+            })
+            .catch(error => {
+                alert("메일 인증 실패.\n" + error);
+            })
+    }
+</script>
+<body>
+
+    <div>
+        <input type="text" id="email" name="email" placeholder="사용자 이메일">
+    </div>
+    <div>
+        <input type="password" id="password" name="password" placeholder="비밀번호">
+    </div>
+    <button onclick="mailCheck()">인증메일 전송</button>
+
+    <div>
+        <input type="text" id="token" name="token" placeholder="인증번호">
+        <button onclick="mailConfirm()">이메일 확인</button>
+    </div>
+
+    <div>
+        <button onclick="signUpRequest()">회원가입</button>
+    </div>
+</body>
+</html>
