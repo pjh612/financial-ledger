@@ -30,7 +30,7 @@ import in.payhere.financialledger.user.controller.request.SignUpWebRequest;
 import in.payhere.financialledger.user.service.UserService;
 import in.payhere.financialledger.user.service.dto.response.SignUpResponse;
 
-@WebMvcTest({UserController.class, SecurityConfig.class})
+@WebMvcTest({UserRestController.class, SecurityConfig.class})
 public class UserControllerTest {
 
 	@Autowired

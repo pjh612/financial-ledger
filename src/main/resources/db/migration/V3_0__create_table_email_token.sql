@@ -1,0 +1,8 @@
+CREATE TABLE email_token
+(
+    id         BIGINT       NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    email      VARCHAR(255) NOT NULL UNIQUE ,
+    token      VARCHAR(300) NOT NULL,
+    expire_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    is_verified BOOLEAN      NOT NULL DEFAULT FALSE
+);

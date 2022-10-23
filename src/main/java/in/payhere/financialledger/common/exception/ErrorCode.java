@@ -20,7 +20,16 @@ public enum ErrorCode implements ErrorModel {
 
 	//LEDGER
 	NOT_FOUND_LEDGER("L001", "Not found data", HttpStatus.NOT_FOUND),
-	NOT_FOUND_LEDGER_RECORD("L002", "Not found data", HttpStatus.NOT_FOUND);
+	NOT_FOUND_LEDGER_RECORD("L002", "Not found data", HttpStatus.NOT_FOUND),
+
+	//EMAIL_TOKEN
+	NOT_VERIFIED_EMAIL("E001", "Not verified email", HttpStatus.BAD_REQUEST),
+	NOT_FOUND_VERIFICATION_TOKEN("E002", "Not found data", HttpStatus.BAD_REQUEST),
+	UPDATE_VERIFICATION_TOKEN_EXCEPTION("E003", "Cannot update verification token", HttpStatus.BAD_REQUEST),
+	NOT_VALID_VERIFICATION_TOKEN("E004", "Not valid verification token", HttpStatus.BAD_REQUEST),
+
+	//MAIL
+	MAIL_SEND_FAIL("M001", "Mail send failed", HttpStatus.INTERNAL_SERVER_ERROR);
 
 	private final String code;
 	private final String message;
