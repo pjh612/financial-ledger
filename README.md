@@ -179,7 +179,7 @@ GET /api/ledgers
 
 ### 가계부 내역 작성
 ```
-GET /api/ledgers/records
+POST /api/ledgers/records
 ```
 - Request
   ```json
